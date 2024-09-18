@@ -14,5 +14,6 @@ namespace Dencove_API.Data
         public DbSet<DenunciaModel> DenunciaModels { get; set; }
         public DbSet<UsuarioModel> UsuarioModels { get; set; }
         public DbSet<CampanhaModel> CampanhaModels { get; set; }
+        public DbSet<CasosDengueModel> CasosDengueModels { get; set; }
     }
 }

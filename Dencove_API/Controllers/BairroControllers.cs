@@ -12,25 +12,25 @@ namespace Dencove_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BairroController : ControllerBase
+    public class BairroControllers : ControllerBase
     {
         private readonly Context _context;
 
-        public BairroController(Context context)
+        public BairroControllers(Context context)
         {
             _context = context;
         }
 
-        // GET: api/Bairro
+        // GET: api/BairroControllers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BairroModel>>> GetBairro()
+        public async Task<ActionResult<IEnumerable<BairroModel>>> GetBairroModels()
         {
             return await _context.BairroModels.ToListAsync();
         }
 
-        // GET: api/Bairro/5
+        // GET: api/BairroControllers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BairroModel>> GetBairro(int id)
+        public async Task<ActionResult<BairroModel>> GetBairroModel(int id)
         {
             var bairroModel = await _context.BairroModels.FindAsync(id);
 
@@ -42,11 +42,13 @@ namespace Dencove_API.Controllers
             return bairroModel;
         }
 
-        // PUT: api/Bairro/5
+        // PUT: api/BairroControllers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBairro(int id, BairroModel bairroModel)
+        public async Task<IActionResult> PutBairroModel(int id, BairroModel bairroModel)
         {
+            
+
             if (id != bairroModel.Id)
             {
                 return BadRequest();
@@ -73,20 +75,22 @@ namespace Dencove_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Bairro
+        // POST: api/BairroControllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BairroModel>> PostBairro(BairroModel bairroModel)
+        public async Task<ActionResult<BairroModel>> PostBairroModel(BairroModel bairroModel, string nome)
         {
+            bairroModel.Nome = nome;
+
             _context.BairroModels.Add(bairroModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBairro", new { id = bairroModel.Id }, bairroModel);
+            return CreatedAtAction("GetBairroModel", new { id = bairroModel.Id }, bairroModel);
         }
 
-        // DELETE: api/Bairro/5
+        // DELETE: api/BairroControllers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBairro(int id)
+        public async Task<IActionResult> DeleteBairroModel(int id)
         {
             var bairroModel = await _context.BairroModels.FindAsync(id);
             if (bairroModel == null)

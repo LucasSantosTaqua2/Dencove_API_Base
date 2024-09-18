@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dencove_API.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240819115510_Att_db_2")]
-    partial class Att_db_2
+    [Migration("20240911130334_Create_DB")]
+    partial class Create_DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,9 +45,11 @@ namespace Dencove_API.Migrations
 
             modelBuilder.Entity("Dencove_API.Models.CampanhaModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DataPublicacao")
                         .HasColumnType("datetime2");
@@ -66,6 +68,44 @@ namespace Dencove_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Campanha");
+                });
+
+            modelBuilder.Entity("Dencove_API.Models.CasosDengueModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BairroId")
+                        .HasColumnType("int")
+                        .HasColumnName("BairroId");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome_Pessoa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BairroId");
+
+                    b.ToTable("CasosDengue");
                 });
 
             modelBuilder.Entity("Dencove_API.Models.DenunciaModel", b =>
@@ -118,9 +158,11 @@ namespace Dencove_API.Migrations
 
             modelBuilder.Entity("Dencove_API.Models.UsuarioModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CPF")
                         .HasMaxLength(11)
@@ -165,6 +207,17 @@ namespace Dencove_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
+                });
+
+            modelBuilder.Entity("Dencove_API.Models.CasosDengueModel", b =>
+                {
+                    b.HasOne("Dencove_API.Models.BairroModel", "Bairro")
+                        .WithMany()
+                        .HasForeignKey("BairroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bairro");
                 });
 #pragma warning restore 612, 618
         }

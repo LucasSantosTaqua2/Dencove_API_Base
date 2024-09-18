@@ -5,7 +5,7 @@ namespace Dencove_API.Models
     [Table("Campanha")]
     public class CampanhaModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         public string Titulo { get; set; }
 

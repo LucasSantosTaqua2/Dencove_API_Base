@@ -30,7 +30,7 @@ namespace Dencove_API.Controllers
 
         // GET: api/Campanha/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CampanhaModel>> GetCampanhaModel(Guid id)
+        public async Task<ActionResult<CampanhaModel>> GetCampanhaModel(int id)
         {
             var campanhaModel = await _context.CampanhaModels.FindAsync(id);
 
@@ -45,8 +45,10 @@ namespace Dencove_API.Controllers
         // PUT: api/Campanha/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCampanhaModel(Guid id, CampanhaModel campanhaModel)
+        public async Task<IActionResult> PutCampanhaModel(int id, CampanhaModel campanhaModel)
         {
+            
+
             if (id != campanhaModel.Id)
             {
                 return BadRequest();
@@ -76,8 +78,12 @@ namespace Dencove_API.Controllers
         // POST: api/Campanha
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CampanhaModel>> PostCampanhaModel(CampanhaModel campanhaModel)
+        public async Task<ActionResult<CampanhaModel>> PostCampanhaModel(CampanhaModel campanhaModel, string titulo, string descricao, bool is_principal)
         {
+            campanhaModel.Titulo = titulo;
+            campanhaModel.Descricao = descricao;
+            campanhaModel.Is_Principal = is_principal;
+
             _context.CampanhaModels.Add(campanhaModel);
             await _context.SaveChangesAsync();
 
@@ -86,7 +92,7 @@ namespace Dencove_API.Controllers
 
         // DELETE: api/Campanha/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCampanhaModel(Guid id)
+        public async Task<IActionResult> DeleteCampanhaModel(int id)
         {
             var campanhaModel = await _context.CampanhaModels.FindAsync(id);
             if (campanhaModel == null)
@@ -100,7 +106,7 @@ namespace Dencove_API.Controllers
             return NoContent();
         }
 
-        private bool CampanhaModelExists(Guid id)
+        private bool CampanhaModelExists(int id)
         {
             return _context.CampanhaModels.Any(e => e.Id == id);
         }
