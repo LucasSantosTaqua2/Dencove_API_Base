@@ -42,11 +42,21 @@ namespace Dencove_API.Controllers
             return casosDengueModel;
         }
 
+
         // PUT: api/CasosDengue/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCasosDengueModel(int id, CasosDengueModel casosDengueModel)
+        public async Task<IActionResult> PutCasosDengueModel(int id, CasosDengueModel casosDengueModel, string nome_pessoa, string endereço, string telefone, string email, bool status, DateOnly datacaso)
+
         {
+            casosDengueModel.Nome_Pessoa = nome_pessoa;
+            casosDengueModel.Endereco = endereço;
+            casosDengueModel.Telefone = telefone;
+            casosDengueModel.Email = email;
+            casosDengueModel.Status = status;
+            casosDengueModel.Data_Caso = datacaso;
+            
+
 
             if (id != casosDengueModel.Id)
             {
@@ -77,20 +87,36 @@ namespace Dencove_API.Controllers
         // POST: api/CasosDengue
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CasosDengueModel>> PostCasosDengueModel(CasosDengueModel casosDengueModel, string nome_pessoa, string endereco, string telefone, string email, bool status, DateOnly datacaso, int bairroid)
+        public async Task<ActionResult<CasosDengueModel>> PostCasosDengueModel(CasosDengueModel novoCaso, DateOnly datacaso)
         {
-            casosDengueModel.Nome_Pessoa = nome_pessoa;
-            casosDengueModel.Endereco = endereco;
-            casosDengueModel.BairroId = bairroid;
-            casosDengueModel.Telefone = telefone;
-            casosDengueModel.Email = email;
-            casosDengueModel.Status = status;
-            casosDengueModel.Data_Caso = datacaso;
+            if (novoCaso == null || novoCaso.BairroId <= 0)
+                return BadRequest("Dados inválidos.");
 
-            _context.CasosDengueModels.Add(casosDengueModel);
-            await _context.SaveChangesAsync();
+            var bairro = _context.BairroModels.FirstOrDefault(b => b.Id == novoCaso.BairroId);
+            if (bairro == null)
+                return NotFound("Bairro não encontrado.");
 
-            return CreatedAtAction("GetCasosDengueModel", new { id = casosDengueModel.Id }, casosDengueModel);
+            var casoDengue = new CasosDengueModel
+            {
+                BairroId = novoCaso.BairroId,
+                Status = novoCaso.Status,
+                Data_Caso = datacaso,
+                Nome_Pessoa = novoCaso.Nome_Pessoa,
+                Telefone = novoCaso.Telefone,
+                Email = novoCaso.Email,
+                Endereco = novoCaso.Endereco,
+            };
+
+            _context.CasosDengueModels.Add(casoDengue);
+            _context.SaveChanges();
+
+            if (casoDengue.Status)
+            {
+                bairro.CasosConfirmados += 1;  
+                _context.SaveChanges();
+            }
+
+            return Ok(new { message = "Caso de dengue cadastrado com sucesso." });
         }
 
         // DELETE: api/CasosDengue/5
