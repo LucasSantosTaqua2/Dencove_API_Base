@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Dencove_API.Data;
 using Dencove_API.Models;
+using Dencove_API.Requests;
 
 namespace Dencove_API.Controllers
 {
@@ -84,14 +85,51 @@ namespace Dencove_API.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public ActionResult<CasoRequest> Add(CasoRequest request)
+        {
+            var x = request.Nome_Pessoa;
+            return Ok();
+        }
+
         // POST: api/CasosDengue
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<CasosDengueModel>> PostCasosDengueModel(CasosDengueModel novoCaso, DateOnly datacaso)
+       /* [HttpPost]
+        public async Task<ActionResult<CasosDengueModel>> PostCasosDengueModel(CasoRequest novoCaso)
         {
-            if (novoCaso == null || novoCaso.BairroId <= 0)
+         /*   if (novoCaso == null || novoCaso.BairroId <= 0)
                 return BadRequest("Dados inválidos.");
 
+            var bairro = _context.BairroModels.FirstOrDefault(b => b.Id == novoCaso.BairroId);
+            if (bairro == null)
+                return NotFound("Bairro não encontrado."); 
+
+            var casoDengue = new CasosDengueModel
+            {
+                Nome_Pessoa = novoCaso.Nome_Pessoa,
+                BairroId = novoCaso.BairroId,
+                Status = novoCaso.Status,
+                Data_Caso = novoCaso.Data_Caso, 
+                Telefone = novoCaso.Telefone,
+                Email = novoCaso.Email,
+                Endereco = novoCaso.Endereco, 
+            };
+
+            _context.CasosDengueModels.Add(casoDengue);
+            _context.SaveChanges();
+
+            if (casoDengue.Status)
+            {
+            //    bairro.CasosConfirmados += 1;
+                _context.SaveChanges();
+            }
+
+            return Ok(new { message = "Caso de dengue cadastrado com sucesso." });
+        }*/
+
+        /*[HttpPost]
+        public async Task<ActionResult<CasosDengueModel>> PostCasosDengueModel(CasoRequest novoCaso)
+        {
             var bairro = _context.BairroModels.FirstOrDefault(b => b.Id == novoCaso.BairroId);
             if (bairro == null)
                 return NotFound("Bairro não encontrado.");
@@ -100,7 +138,7 @@ namespace Dencove_API.Controllers
             {
                 BairroId = novoCaso.BairroId,
                 Status = novoCaso.Status,
-                Data_Caso = datacaso,
+                Data_Caso = novoCaso.Data_Caso,
                 Nome_Pessoa = novoCaso.Nome_Pessoa,
                 Telefone = novoCaso.Telefone,
                 Email = novoCaso.Email,
@@ -117,7 +155,7 @@ namespace Dencove_API.Controllers
             }
 
             return Ok(new { message = "Caso de dengue cadastrado com sucesso." });
-        }
+        } */
 
         // DELETE: api/CasosDengue/5
         [HttpDelete("{id}")]
